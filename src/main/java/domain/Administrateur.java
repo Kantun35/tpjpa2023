@@ -31,6 +31,6 @@ public class Administrateur extends Employee {
     @Override
     public String toString() {
         return "Employee [id=" + this.getId() + ", name=" + this.getName() + ", department="
-                + this.getDepartment().getName() + ", mdp=" + this.getMdpEnClaire() + "]";
+                + this.getDepartment().getName() + ", mdp=" + this.getMdpEnClaire() + "]\n";
     }
 }

@@ -2,18 +2,23 @@ package domain;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Query;
-import org.hsqldb.lib.List;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
 
+@NamedQuery(name = "UserEntity.findByUserId", query = "SELECT e FROM Department e WHERE e.name = :name")
 public class DepartmentDAOImpl implements Dao<Department> {
 
     private EntityManager entityManager;
 
     // standard constructors
+    public DepartmentDAOImpl(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
 
     @Override
     public Optional<Department> get(long id) {
@@ -23,12 +28,13 @@ public class DepartmentDAOImpl implements Dao<Department> {
     @Override
     public List<Department> getAll() {
         Query query = entityManager.createQuery("SELECT e FROM Department e");
-        return (List<Department>) query.getResultList();
+        return query.getResultList();
     }
 
     @Override
-    public void save(Department department) {
+    public Department save(Department department) {
         executeInsideTransaction(entityManager -> entityManager.persist(department));
+        return department;
     }
 
     @Override
@@ -42,14 +48,19 @@ public class DepartmentDAOImpl implements Dao<Department> {
         executeInsideTransaction(entityManager -> entityManager.remove(department));
     }
 
+    public Optional<Department> findDPTByName(String name) {
+        Query query = entityManager.createNamedQuery("find_dpt_by_name",Department.class);
+        query.setParameter("name",name);
+        return Optional.ofNullable((Department) query.getSingleResult());
+    }
+
     private void executeInsideTransaction(Consumer<EntityManager> action) {
         EntityTransaction tx = entityManager.getTransaction();
         try {
             tx.begin();
             action.accept(entityManager);
             tx.commit();
-        }
-        catch (RuntimeException e) {
+        } catch (RuntimeException e) {
             tx.rollback();
             throw e;
         }

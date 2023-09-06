@@ -18,10 +18,6 @@ public class Department {
     @OneToMany(mappedBy = "department", cascade = CascadeType.PERSIST)
     private List<Employee> employees = new ArrayList<Employee>();
 
-    public Department() {
-        super();
-    }
-
     public Department(String name) {
         this.name = name;
     }
@@ -49,5 +45,10 @@ public class Department {
 
     public void setEmployees(List<Employee> employees) {
         this.employees = employees;
+    }
+
+    @Override
+    public String toString() {
+        return "Department [id=" + this.getId() + ", name=" + this.getName() + "]\n";
     }
 }

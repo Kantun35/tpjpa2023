@@ -3,8 +3,8 @@ package domain;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Query;
-import org.hsqldb.lib.List;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -14,6 +14,9 @@ public class AdministrateurDAOImpl implements Dao<Administrateur> {
     private EntityManager entityManager;
 
     // standard constructors
+    public AdministrateurDAOImpl(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
 
     @Override
     public Optional<Administrateur> get(long id) {
@@ -22,13 +25,14 @@ public class AdministrateurDAOImpl implements Dao<Administrateur> {
 
     @Override
     public List<Administrateur> getAll() {
-        Query query = entityManager.createQuery("SELECT e FROM employee e where type_employee = 'ADM'");
-        return (List<Administrateur>) query.getResultList();
+        Query query = entityManager.createQuery("SELECT e FROM Administrateur e");
+        return query.getResultList();
     }
 
     @Override
-    public void save(Administrateur administrateur) {
+    public Administrateur save(Administrateur administrateur) {
         executeInsideTransaction(entityManager -> entityManager.persist(administrateur));
+        return administrateur;
     }
 
     @Override

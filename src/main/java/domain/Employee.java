@@ -4,9 +4,12 @@ import jakarta.persistence.*;
 
 @Entity(name = "Employee") // pas nécessaire de renommer si tu veux garder le nom
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "type_employee")
+@DiscriminatorColumn(name = "typeEmployee",discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("EMP")
 public class Employee {
+
+    @Column(name = "typeEmployee", insertable = false, updatable = false)
+    protected  String typeEmployee;
     @GeneratedValue
     @Column(name = "id")
     @Id
@@ -56,10 +59,14 @@ public class Employee {
         this.department = department;
     }
 
+    public String getTypeEmployee() {
+        return typeEmployee;
+    }
+
     @Override
     public String toString() {
         return "Employee [id=" + id + ", name=" + name + ", department="
-                + department.getName() + "]";
+                + department.getName() + "]\n";
     }
 
 }

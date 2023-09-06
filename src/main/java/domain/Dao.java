@@ -1,7 +1,7 @@
 package domain;
 
-import org.hsqldb.lib.List;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface Dao<T> {
@@ -10,7 +10,7 @@ public interface Dao<T> {
 
     List<T> getAll();
 
-    void save(T t);
+    T save(T t);
 
     void update(T t, String[] params);
 
