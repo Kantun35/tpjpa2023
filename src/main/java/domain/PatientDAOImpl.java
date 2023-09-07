@@ -31,21 +31,21 @@ public class PatientDAOImpl implements Dao<Patient> {
     }
 
     @Override
-    public Patient save(Patient Patient) {
-        executeInsideTransaction(entityManager -> entityManager.persist(Patient));
-        return Patient;
+    public Patient save(Patient patient) {
+        executeInsideTransaction(entityManager -> entityManager.persist(patient));
+        return patient;
     }
 
 
     @Override
-    public void update(Patient Patient, Object[] params) {
-        Patient.setNumSecSoc(Objects.requireNonNull((String) params[0], "NumSecSoc cannot be null"));
-        executeInsideTransaction(entityManager -> entityManager.merge(Patient));
+    public void update(Patient patient, Object[] params) {
+        patient.setNumSecSoc(Objects.requireNonNull((String) params[0], "NumSecSoc cannot be null"));
+        executeInsideTransaction(entityManager -> entityManager.merge(patient));
     }
 
     @Override
-    public void delete(Patient Patient) {
-        executeInsideTransaction(entityManager -> entityManager.remove(Patient));
+    public void delete(Patient patient) {
+        executeInsideTransaction(entityManager -> entityManager.remove(patient));
     }
 
     private void executeInsideTransaction(Consumer<EntityManager> action) {

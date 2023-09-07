@@ -30,21 +30,21 @@ public class ChirurgienDAOImpl implements Dao<Chirurgien> {
     }
 
     @Override
-    public Chirurgien save(Chirurgien Chirurgien) {
-        executeInsideTransaction(entityManager -> entityManager.persist(Chirurgien));
-        return Chirurgien;
+    public Chirurgien save(Chirurgien chirurgien) {
+        executeInsideTransaction(entityManager -> entityManager.persist(chirurgien));
+        return chirurgien;
     }
 
 
     @Override
-    public void update(Chirurgien Chirurgien, Object[] params) {
-        Chirurgien.setOperationRatee(Objects.requireNonNull((int) params[0], "OperationRatee cannot be null"));
-        executeInsideTransaction(entityManager -> entityManager.merge(Chirurgien));
+    public void update(Chirurgien chirurgien, Object[] params) {
+        chirurgien.setOperationRatee(Objects.requireNonNull((int) params[0], "OperationRatee cannot be null"));
+        executeInsideTransaction(entityManager -> entityManager.merge(chirurgien));
     }
 
     @Override
-    public void delete(Chirurgien Chirurgien) {
-        executeInsideTransaction(entityManager -> entityManager.remove(Chirurgien));
+    public void delete(Chirurgien chirurgien) {
+        executeInsideTransaction(entityManager -> entityManager.remove(chirurgien));
     }
 
     private void executeInsideTransaction(Consumer<EntityManager> action) {

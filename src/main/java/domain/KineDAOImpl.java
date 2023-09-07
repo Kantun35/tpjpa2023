@@ -30,21 +30,21 @@ public class KineDAOImpl implements Dao<Kine> {
     }
 
     @Override
-    public Kine save(Kine Kine) {
-        executeInsideTransaction(entityManager -> entityManager.persist(Kine));
-        return Kine;
+    public Kine save(Kine kine) {
+        executeInsideTransaction(entityManager -> entityManager.persist(kine));
+        return kine;
     }
 
 
     @Override
-    public void update(Kine Kine, Object[] params) {
-        Kine.setColonneCasseeEnDeux(Objects.requireNonNull((int) params[0], "ColonneCasseEnDeux cannot be null"));
-        executeInsideTransaction(entityManager -> entityManager.merge(Kine));
+    public void update(Kine kine, Object[] params) {
+        kine.setColonneCasseeEnDeux(Objects.requireNonNull((int) params[0], "ColonneCasseEnDeux cannot be null"));
+        executeInsideTransaction(entityManager -> entityManager.merge(kine));
     }
 
     @Override
-    public void delete(Kine Kine) {
-        executeInsideTransaction(entityManager -> entityManager.remove(Kine));
+    public void delete(Kine kine) {
+        executeInsideTransaction(entityManager -> entityManager.remove(kine));
     }
 
     private void executeInsideTransaction(Consumer<EntityManager> action) {

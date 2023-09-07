@@ -31,22 +31,22 @@ public class PracticienDAOImpl implements Dao<Practicien> {
     }
 
     @Override
-    public Practicien save(Practicien Practicien) {
-        executeInsideTransaction(entityManager -> entityManager.persist(Practicien));
-        return Practicien;
+    public Practicien save(Practicien practicien) {
+        executeInsideTransaction(entityManager -> entityManager.persist(practicien));
+        return practicien;
     }
 
 
     @Override
-    public void update(Practicien Practicien, Object[] params) {
-        Practicien.setName(Objects.requireNonNull((String) params[0], "Name cannot be null"));
-        Practicien.setAnciennete(Objects.requireNonNull((Date) params[1], "Anciennete cannot be null"));
-        executeInsideTransaction(entityManager -> entityManager.merge(Practicien));
+    public void update(Practicien practicien, Object[] params) {
+        practicien.setName(Objects.requireNonNull((String) params[0], "Name cannot be null"));
+        practicien.setAnciennete(Objects.requireNonNull((Date) params[1], "Anciennete cannot be null"));
+        executeInsideTransaction(entityManager -> entityManager.merge(practicien));
     }
 
     @Override
-    public void delete(Practicien Practicien) {
-        executeInsideTransaction(entityManager -> entityManager.remove(Practicien));
+    public void delete(Practicien practicien) {
+        executeInsideTransaction(entityManager -> entityManager.remove(practicien));
     }
 
     private void executeInsideTransaction(Consumer<EntityManager> action) {

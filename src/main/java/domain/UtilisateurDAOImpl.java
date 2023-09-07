@@ -31,22 +31,22 @@ public class UtilisateurDAOImpl implements Dao<Utilisateur> {
     }
 
     @Override
-    public Utilisateur save(Utilisateur Utilisateur) {
-        executeInsideTransaction(entityManager -> entityManager.persist(Utilisateur));
-        return Utilisateur;
+    public Utilisateur save(Utilisateur utilisateur) {
+        executeInsideTransaction(entityManager -> entityManager.persist(utilisateur));
+        return utilisateur;
     }
 
 
     @Override
-    public void update(Utilisateur Utilisateur, Object[] params) {
-        Utilisateur.setName(Objects.requireNonNull((String) params[0], "NumSecSoc cannot be null"));
-        Utilisateur.setTel(Objects.requireNonNull((String) params[1], "NumSecSoc cannot be null"));
-        executeInsideTransaction(entityManager -> entityManager.merge(Utilisateur));
+    public void update(Utilisateur utilisateur, Object[] params) {
+        utilisateur.setName(Objects.requireNonNull((String) params[0], "NumSecSoc cannot be null"));
+        utilisateur.setTel(Objects.requireNonNull((String) params[1], "NumSecSoc cannot be null"));
+        executeInsideTransaction(entityManager -> entityManager.merge(utilisateur));
     }
 
     @Override
-    public void delete(Utilisateur Utilisateur) {
-        executeInsideTransaction(entityManager -> entityManager.remove(Utilisateur));
+    public void delete(Utilisateur utilisateur) {
+        executeInsideTransaction(entityManager -> entityManager.remove(utilisateur));
     }
 
     private void executeInsideTransaction(Consumer<EntityManager> action) {

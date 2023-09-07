@@ -77,8 +77,8 @@ public class JpaTest {
 	}
 
 	private void creationJeuDeDonnees() {
-		EntityTransaction tx = manager.getTransaction();
-		tx.begin();
+		//EntityTransaction tx = manager.getTransaction();
+		//tx.begin();
 		try {
 
 			managerUser.save(new Utilisateur("Bob Bill","9867475869"));
@@ -99,9 +99,9 @@ public class JpaTest {
 		} catch (Exception e) {
 			System.out.flush();
 			System.out.println("YOU FAILED !!!");
-			tx.rollback();
+			//tx.rollback();
 		}
-		tx.commit();
+		//tx.commit();
 	}
 
 	private void createEmployees() {
