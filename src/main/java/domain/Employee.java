@@ -22,10 +22,6 @@ public class Employee {
     @ManyToOne(cascade = CascadeType.PERSIST) //
     private Department department;
 
-
-    public Employee() {
-    }
-
     public Employee(String name, Department department) {
         this.name = name;
         this.department = department;

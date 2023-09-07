@@ -12,9 +12,6 @@ public class Administrateur extends Employee {
     private String mdpEnClaire;
 
 
-    public Administrateur() {
-    }
-
     public Administrateur( String name ,Department department,String mdpEnClaire) {
         super(name,department);
         this.mdpEnClaire = mdpEnClaire;

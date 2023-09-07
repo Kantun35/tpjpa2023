@@ -6,9 +6,12 @@ import java.util.Date;
 
 @Entity
 @Inheritance(strategy= InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "domaine_expertise",discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorColumn(name = "domaineExpertise",discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("GEN") // généraliste par défaut
 public class Practicien extends Utilisateur{
+
+    @Column(name = "domaineExpertise", insertable = false, updatable = false)
+    private String domaineExpertise;
 
     @Column(name = "anciennete")
     private Date anciennete;

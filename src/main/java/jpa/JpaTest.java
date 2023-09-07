@@ -95,10 +95,15 @@ public class JpaTest {
 
 			managerKine.save(new Kine("Karen","8756449765",new Date(),1280));
 			managerKine.save(new Kine("Paul","8798569765",new Date(),11));
+			//tx.commit();
 
 		} catch (Exception e) {
 			System.out.flush();
 			System.out.println("YOU FAILED !!!");
+			System.out.println("------------------------\n");
+			e.printStackTrace(System.out);
+			System.out.println("------------------------\n");
+
 			//tx.rollback();
 		}
 		//tx.commit();
