@@ -7,31 +7,61 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
 
+import java.util.Date;
+
 public class JpaTest {
 
 
 	private EntityManager manager;
+	private UtilisateurDAOImpl managerUser;
+	private PatientDAOImpl managerPatient;
+	private PracticienDAOImpl managerPracticien;
+	private KineDAOImpl managerKine;
+	private ChirurgienDAOImpl managerChirurgien;
 
-	public JpaTest(EntityManager manager) {
+	private EmployeeDAOImpl managerEmployee;
+
+	private AdministrateurDAOImpl managerAdmin;
+
+	private DepartmentDAOImpl managerDPT;
+
+
+	public JpaTest(EntityManager manager, UtilisateurDAOImpl managerUser, PatientDAOImpl managerPatient, PracticienDAOImpl managerPracticien, KineDAOImpl managerKine, ChirurgienDAOImpl managerChirurgien) {
 		this.manager = manager;
+		this.managerUser = managerUser;
+		this.managerPatient = managerPatient;
+		this.managerPracticien = managerPracticien;
+		this.managerKine = managerKine;
+		this.managerChirurgien = managerChirurgien;
 	}
+
+	public JpaTest(EntityManager manager, EmployeeDAOImpl managerEmployee, AdministrateurDAOImpl managerAdmin, DepartmentDAOImpl managerDPT) {
+		this.manager = manager;
+		this.managerEmployee = managerEmployee;
+		this.managerAdmin = managerAdmin;
+		this.managerDPT = managerDPT;
+	}
+
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		versionPreProjet(); // à décommenter pour voir la version initiale (pas doctolib)
+		//versionPreProjet(); // à décommenter pour voir la version initiale (pas doctolib)
 		versionDoctoLib();
 	}
 
 	private static void versionDoctoLib() {
 		EntityManager manager = EntityManagerHelper.getEntityManager();
 
-		JpaTest test = new JpaTest(manager);
+		//UtilisateurDAOImpl managerUser, PatientDAOImpl managerPatient, PracticienDAOImpl managerPracticien, KineDAOImpl managerKine, ChirurgienDAOImpl managerChirurgien
 
-		EmployeeDAOImpl managerEmployee = new EmployeeDAOImpl(manager);
-		AdministrateurDAOImpl managerAdmin = new AdministrateurDAOImpl(manager);
-		DepartmentDAOImpl managerDPT = new DepartmentDAOImpl(manager);
+		UtilisateurDAOImpl managerUser = new UtilisateurDAOImpl(manager);
+		PatientDAOImpl managerPatient = new PatientDAOImpl(manager);
+		PracticienDAOImpl managerPracticien = new PracticienDAOImpl(manager);
+		KineDAOImpl managerKine = new KineDAOImpl(manager);
+		ChirurgienDAOImpl managerChirurgien = new ChirurgienDAOImpl(manager);
 
+		JpaTest test = new JpaTest(manager,managerUser,managerPatient,managerPracticien,managerKine,managerChirurgien);
 
 		try {
 			test.creationJeuDeDonnees();
@@ -51,7 +81,20 @@ public class JpaTest {
 		tx.begin();
 		try {
 
+			managerUser.save(new Utilisateur("Bob Bill","9867475869"));
+			managerUser.save(new Utilisateur("Bill Bob","8495837573"));
 
+			managerPatient.save(new Patient("Tom Pit","8748576432","XXXXXXXXXXXXXX"));
+			managerPatient.save(new Patient("Tim Pit","7594586948","YYYYYYYYYYYYYY"));
+
+			managerPracticien.save(new Practicien("Jordan FONSECA LEITE DA SILVA","7598675423",new Date()));
+			managerPracticien.save(new Practicien("Quentin BIGOT","3456739709",new Date()));
+
+			managerChirurgien.save(new Chirurgien("Gaston","8674321230",new Date(),5));
+			managerChirurgien.save(new Chirurgien("Pierre","8674321230",new Date(),11));
+
+			managerKine.save(new Kine("Karen","8756449765",new Date(),1280));
+			managerKine.save(new Kine("Paul","8798569765",new Date(),11));
 
 		} catch (Exception e) {
 			System.out.flush();
@@ -91,11 +134,11 @@ public class JpaTest {
 	private static void versionPreProjet() {
 		EntityManager manager = EntityManagerHelper.getEntityManager();
 
-		JpaTest test = new JpaTest(manager);
-
 		EmployeeDAOImpl managerEmployee = new EmployeeDAOImpl(manager);
 		AdministrateurDAOImpl managerAdmin = new AdministrateurDAOImpl(manager);
 		DepartmentDAOImpl managerDPT = new DepartmentDAOImpl(manager);
+
+		JpaTest test = new JpaTest(manager,managerEmployee,managerAdmin,managerDPT);
 
 
 		try {

@@ -1,9 +1,13 @@
 package domain;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
 
 import java.util.Date;
 
+@Entity
+@DiscriminatorValue("CHI")
 public class Chirurgien  extends Practicien {
 
     @Column(name = "opération_ratée")
