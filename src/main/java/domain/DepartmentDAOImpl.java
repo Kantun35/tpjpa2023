@@ -38,8 +38,8 @@ public class DepartmentDAOImpl implements Dao<Department> {
     }
 
     @Override
-    public void update(Department department, String[] params) {
-        department.setName(Objects.requireNonNull(params[0], "Name cannot be null"));
+    public void update(Department department, Object[] params) {
+        department.setName(Objects.requireNonNull((String) params[0], "Name cannot be null"));
         executeInsideTransaction(entityManager -> entityManager.merge(department));
     }
 

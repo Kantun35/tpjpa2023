@@ -36,9 +36,9 @@ public class AdministrateurDAOImpl implements Dao<Administrateur> {
     }
 
     @Override
-    public void update(Administrateur administrateur, String[] params) {
-        administrateur.setName(Objects.requireNonNull(params[0], "Name cannot be null"));
-        administrateur.setMdpEnClaire(Objects.requireNonNull(params[0], "MdpEnClaire cannot be null"));
+    public void update(Administrateur administrateur, Object[] params) {
+        administrateur.setName(Objects.requireNonNull((String) params[0], "Name cannot be null"));
+        administrateur.setMdpEnClaire(Objects.requireNonNull((String) params[1], "MdpEnClaire cannot be null"));
         executeInsideTransaction(entityManager -> entityManager.merge(administrateur));
     }
 

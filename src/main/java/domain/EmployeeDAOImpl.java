@@ -36,8 +36,8 @@ public class EmployeeDAOImpl implements Dao<Employee> {
     }
 
     @Override
-    public void update(Employee employee, String[] params) {
-        employee.setName(Objects.requireNonNull(params[0], "Name cannot be null"));
+    public void update(Employee employee, Object[] params) {
+        employee.setName(Objects.requireNonNull((String) params[0], "Name cannot be null"));
         executeInsideTransaction(entityManager -> entityManager.merge(employee));
     }
 
