@@ -15,6 +15,7 @@ public class UtilisateurDAOImpl implements Dao<Utilisateur> {
     private EntityManager entityManager;
 
     // standard constructors
+
     public UtilisateurDAOImpl(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
@@ -39,8 +40,8 @@ public class UtilisateurDAOImpl implements Dao<Utilisateur> {
 
     @Override
     public void update(Utilisateur utilisateur, Object[] params) {
-        utilisateur.setName(Objects.requireNonNull((String) params[0], "NumSecSoc cannot be null"));
-        utilisateur.setTel(Objects.requireNonNull((String) params[1], "NumSecSoc cannot be null"));
+        utilisateur.setName(Objects.requireNonNull((String) params[0], "Name cannot be null"));
+        utilisateur.setTel(Objects.requireNonNull((String) params[1], "Tel cannot be null"));
         executeInsideTransaction(entityManager -> entityManager.merge(utilisateur));
     }
 

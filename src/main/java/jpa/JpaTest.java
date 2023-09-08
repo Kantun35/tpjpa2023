@@ -8,8 +8,11 @@ import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
 
 import java.util.Date;
+import java.util.List;
 
 public class JpaTest {
+
+	//TODO Date SQL, daoIMPL update, refaire le depot
 
 
 	private EntityManager manager;
@@ -25,14 +28,17 @@ public class JpaTest {
 
 	private DepartmentDAOImpl managerDPT;
 
+	private RDVDAOImpl managerRDV;
 
-	public JpaTest(EntityManager manager, UtilisateurDAOImpl managerUser, PatientDAOImpl managerPatient, PracticienDAOImpl managerPracticien, KineDAOImpl managerKine, ChirurgienDAOImpl managerChirurgien) {
+
+	public JpaTest(EntityManager manager, UtilisateurDAOImpl managerUser, PatientDAOImpl managerPatient, PracticienDAOImpl managerPracticien, KineDAOImpl managerKine, ChirurgienDAOImpl managerChirurgien, RDVDAOImpl managerRDV) {
 		this.manager = manager;
 		this.managerUser = managerUser;
 		this.managerPatient = managerPatient;
 		this.managerPracticien = managerPracticien;
 		this.managerKine = managerKine;
 		this.managerChirurgien = managerChirurgien;
+		this.managerRDV = managerRDV;
 	}
 
 	public JpaTest(EntityManager manager, EmployeeDAOImpl managerEmployee, AdministrateurDAOImpl managerAdmin, DepartmentDAOImpl managerDPT) {
@@ -60,8 +66,9 @@ public class JpaTest {
 		PracticienDAOImpl managerPracticien = new PracticienDAOImpl(manager);
 		KineDAOImpl managerKine = new KineDAOImpl(manager);
 		ChirurgienDAOImpl managerChirurgien = new ChirurgienDAOImpl(manager);
+		RDVDAOImpl managerRDV = new RDVDAOImpl(manager);
 
-		JpaTest test = new JpaTest(manager,managerUser,managerPatient,managerPracticien,managerKine,managerChirurgien);
+		JpaTest test = new JpaTest(manager,managerUser,managerPatient,managerPracticien,managerKine,managerChirurgien,managerRDV);
 
 		try {
 			test.creationJeuDeDonnees();
@@ -95,6 +102,11 @@ public class JpaTest {
 
 			managerKine.save(new Kine("Karen","8756449765",new Date(),1280));
 			managerKine.save(new Kine("Paul","8798569765",new Date(),11));
+
+			List<Patient> patients = managerPatient.getAll();
+			List<Practicien> practicien = managerPracticien.getAll();
+
+			managerRDV.save(new RDV(new Date(),patients.get(0),practicien.get(0),"Créé"));
 			//tx.commit();
 
 		} catch (Exception e) {

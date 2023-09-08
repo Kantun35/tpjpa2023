@@ -2,8 +2,12 @@ package domain;
 
 import jakarta.persistence.*;
 
+import java.io.Serializable;
+
 @Entity(name = "Utilisateur") // pas nécessaire de renommer si tu veux garder le nom
-@Inheritance(strategy= InheritanceType.TABLE_PER_CLASS) // regroupe dans cette même table les attributs des classe enfants
+@Inheritance(strategy= InheritanceType.SINGLE_TABLE) // regroupe dans cette même table les attributs des classe enfants
+@DiscriminatorColumn(name = "domaineExpertise",discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorValue("USE") // généraliste par défaut
 public class Utilisateur {
 
     @Id
