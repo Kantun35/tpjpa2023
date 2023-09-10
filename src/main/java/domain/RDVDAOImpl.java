@@ -3,6 +3,7 @@ package domain;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Query;
+import jdk.jshell.execution.Util;
 
 import java.util.Date;
 import java.util.List;
@@ -11,6 +12,8 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 public class RDVDAOImpl implements Dao<RDV> {
+
+
 
     private EntityManager entityManager;
 
@@ -62,6 +65,71 @@ public class RDVDAOImpl implements Dao<RDV> {
         catch (RuntimeException e) {
             tx.rollback();
             throw e;
+        }
+    }
+
+    public RDV prendreUnRDV(Utilisateur user, Patient patient, Practicien practicien, Date date) {
+        Objects.requireNonNull(date, "Date cannot be null");
+        Objects.requireNonNull(patient, "Patient cannot be null");
+        Objects.requireNonNull(practicien, "Practicien cannot be null");
+
+        RDV rdv = null;
+        if(user instanceof Patient) {
+            rdv = new RDV(date,patient,practicien,"en attente de validation");
+            save(rdv);
+        }
+        return rdv;
+    }
+
+    public RDV validerUnRDV(Utilisateur user,RDV rdv) {
+        Objects.requireNonNull(rdv, "rdv cannot be null");
+        Objects.requireNonNull(user, "user cannot be null");
+
+        if(user instanceof Practicien && isEtatValid(rdv)) {
+            rdv.setEtat("Validé");
+            executeInsideTransaction(entityManager -> entityManager.merge(rdv));
+        }
+        return rdv;
+    }
+
+    public RDV refuserUnRDV(Utilisateur user, RDV rdv) {
+        Objects.requireNonNull(rdv, "rdv cannot be null");
+        Objects.requireNonNull(user, "user cannot be null");
+
+        if(user instanceof Practicien && isEtatValid(rdv)) {
+            rdv.setEtat("Refusé");
+            executeInsideTransaction(entityManager -> entityManager.merge(rdv));
+        }
+        return rdv;
+    }
+
+    public RDV annulerUnRDV(Utilisateur user, RDV rdv) {
+        Objects.requireNonNull(rdv, "rdv cannot be null");
+        Objects.requireNonNull(user, "user cannot be null");
+
+        if(user instanceof Practicien && isEtatValid(rdv)) {
+            rdv.setEtat("Annulé");
+            executeInsideTransaction(entityManager -> entityManager.merge(rdv));
+        }
+        return rdv;
+    }
+
+    public RDV reporterUnRDV(Utilisateur user, RDV rdv, Date date) {
+        Objects.requireNonNull(rdv, "rdv cannot be null");
+        Objects.requireNonNull(user, "user cannot be null");
+        Objects.requireNonNull(date, "date cannot be null");
+
+        if(user instanceof Practicien && isEtatValid(rdv)) {
+            rdv.setDate(date);
+            rdv.setEtat("Reporté");
+        }
+    }
+
+    private Boolean isEtatValid(RDV rdv) {
+        if (Objects.equals(rdv.getEtat(), "Annulé") || Objects.equals(rdv.getEtat(), "Refusé")) {
+            return false;
+        } else {
+            return true;
         }
     }
 }
