@@ -67,6 +67,10 @@ public class RDV {
         this.etat = etat;
     }
 
+    public RDV getCopy() {
+        return new RDV(this.date,this.patient,this.practicien,this.etat);
+    }
+
     @Override
     public String toString() {
         return "RDV [id=" + this.id + "]\n";

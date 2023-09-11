@@ -13,6 +13,13 @@ import java.util.function.Consumer;
 
 public class RDVDAOImpl implements Dao<RDV> {
 
+    private final static  String A = "Annulé";
+    private final static  String R = "Refusé";
+    private final static  String EV = "en attente de validation";
+    private final static  String V = "Validé";
+
+    private final static  String D = "Deplacé";
+
 
 
     private EntityManager entityManager;
@@ -31,6 +38,20 @@ public class RDVDAOImpl implements Dao<RDV> {
     @Override
     public List<RDV> getAll() {
         Query query = entityManager.createQuery("SELECT e FROM RDV e");
+        return query.getResultList();
+    }
+
+    public List<RDV> getAllValid() {
+        Query query = entityManager.createQuery("SELECT e FROM RDV e WHERE e.etat != :R AND e.etat != :A AND e.etat != :EV");
+        query.setParameter("R",R);
+        query.setParameter("A",A);
+        query.setParameter("EV",EV);
+        return query.getResultList();
+    }
+
+    public List<RDV> getAllForValid() {
+        Query query = entityManager.createQuery("SELECT e FROM RDV e WHERE e.etat = :EV");
+        query.setParameter("EV",EV);
         return query.getResultList();
     }
 
@@ -74,8 +95,8 @@ public class RDVDAOImpl implements Dao<RDV> {
         Objects.requireNonNull(practicien, "Practicien cannot be null");
 
         RDV rdv = null;
-        if(user instanceof Patient) {
-            rdv = new RDV(date,patient,practicien,"en attente de validation");
+        if(user instanceof Patient && patient == user) {
+            rdv = new RDV(date,patient,practicien,EV);
             save(rdv);
         }
         return rdv;
@@ -85,8 +106,8 @@ public class RDVDAOImpl implements Dao<RDV> {
         Objects.requireNonNull(rdv, "rdv cannot be null");
         Objects.requireNonNull(user, "user cannot be null");
 
-        if(user instanceof Practicien && isEtatValid(rdv)) {
-            rdv.setEtat("Validé");
+        if(user instanceof Practicien && isEtatValid(rdv) && user == rdv.getPracticien()) {
+            rdv.setEtat(V);
             executeInsideTransaction(entityManager -> entityManager.merge(rdv));
         }
         return rdv;
@@ -96,8 +117,8 @@ public class RDVDAOImpl implements Dao<RDV> {
         Objects.requireNonNull(rdv, "rdv cannot be null");
         Objects.requireNonNull(user, "user cannot be null");
 
-        if(user instanceof Practicien && isEtatValid(rdv)) {
-            rdv.setEtat("Refusé");
+        if(user instanceof Practicien && isEtatValid(rdv) && user == rdv.getPracticien()) {
+            rdv.setEtat(R);
             executeInsideTransaction(entityManager -> entityManager.merge(rdv));
         }
         return rdv;
@@ -107,8 +128,8 @@ public class RDVDAOImpl implements Dao<RDV> {
         Objects.requireNonNull(rdv, "rdv cannot be null");
         Objects.requireNonNull(user, "user cannot be null");
 
-        if(user instanceof Practicien && isEtatValid(rdv)) {
-            rdv.setEtat("Annulé");
+        if(user instanceof Practicien && isEtatValid(rdv) && user == rdv.getPracticien()) {
+            rdv.setEtat(A);
             executeInsideTransaction(entityManager -> entityManager.merge(rdv));
         }
         return rdv;
@@ -119,14 +140,15 @@ public class RDVDAOImpl implements Dao<RDV> {
         Objects.requireNonNull(user, "user cannot be null");
         Objects.requireNonNull(date, "date cannot be null");
 
-        if(user instanceof Practicien && isEtatValid(rdv)) {
+        if(user instanceof Practicien && isEtatValid(rdv) && user == rdv.getPracticien()) {
             rdv.setDate(date);
-            rdv.setEtat("Reporté");
+            rdv.setEtat(D);
         }
+        return rdv;
     }
 
     private Boolean isEtatValid(RDV rdv) {
-        if (Objects.equals(rdv.getEtat(), "Annulé") || Objects.equals(rdv.getEtat(), "Refusé")) {
+        if (Objects.equals(rdv.getEtat(), A) || Objects.equals(rdv.getEtat(), R)) {
             return false;
         } else {
             return true;

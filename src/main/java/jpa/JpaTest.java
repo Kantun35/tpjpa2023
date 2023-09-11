@@ -91,22 +91,85 @@ public class JpaTest {
 			managerUser.save(new Utilisateur("Bob Bill","9867475869"));
 			managerUser.save(new Utilisateur("Bill Bob","8495837573"));
 
-			managerPatient.save(new Patient("Tom Pit","8748576432","XXXXXXXXXXXXXX"));
-			managerPatient.save(new Patient("Tim Pit","7594586948","YYYYYYYYYYYYYY"));
+			Patient pa1 = managerPatient.save(new Patient("Tom Pit","8748576432","XXXXXXXXXXXXXX"));
+			Patient pa2 = managerPatient.save(new Patient("Tim Pit","7594586948","YYYYYYYYYYYYYY"));
 
 			managerPracticien.save(new Practicien("Jordan FONSECA LEITE DA SILVA","7598675423",new Date()));
 			managerPracticien.save(new Practicien("Quentin BIGOT","3456739709",new Date()));
 
-			managerChirurgien.save(new Chirurgien("Gaston","8674321230",new Date(),5));
-			managerChirurgien.save(new Chirurgien("Pierre","8674321230",new Date(),11));
+			Chirurgien ch1 = managerChirurgien.save(new Chirurgien("Gaston","8674321230",new Date(),5));
+			Chirurgien ch2 = managerChirurgien.save(new Chirurgien("Pierre","8674321230",new Date(),11));
 
-			managerKine.save(new Kine("Karen","8756449765",new Date(),1280));
-			managerKine.save(new Kine("Paul","8798569765",new Date(),11));
+			Kine k1 = managerKine.save(new Kine("Karen","8756449765",new Date(),1280));
+			Kine k2 = managerKine.save(new Kine("Paul","8798569765",new Date(),11));
 
 			List<Patient> patients = managerPatient.getAll();
 			List<Practicien> practicien = managerPracticien.getAll();
 
-			managerRDV.save(new RDV(new Date(),patients.get(0),practicien.get(0),"Créé"));
+			RDV saveRDV;
+
+			RDV rdv1 = managerRDV.prendreUnRDV(pa1,pa1,ch1,new Date());
+
+			//un user ne peut pas validé son propre rendez-vous
+			saveRDV = rdv1.getCopy();
+			rdv1 = managerRDV.validerUnRDV(pa1,rdv1);
+			System.out.println("[VALID] nouvel état :" + rdv1.getEtat() + " précédent :" + saveRDV.getEtat() + " voulu : En attente de validation");
+
+			//un rdv ne peut être modifié que par le practicien auquel il est lié
+			saveRDV = rdv1.getCopy();
+			rdv1 = managerRDV.validerUnRDV(pa2,rdv1);
+			System.out.println("[VALID] nouvel état :" + rdv1.getEtat() + " précédent :" + saveRDV.getEtat() + " voulu : En attente de validation");
+
+			saveRDV = rdv1.getCopy();
+			rdv1 = managerRDV.validerUnRDV(ch1,rdv1);
+			System.out.println("[VALID] nouvel état :" + rdv1.getEtat() + " précédent :" + saveRDV.getEtat() + " voulu : Validé");
+
+
+			RDV rdv2 = managerRDV.prendreUnRDV(pa1,pa1,ch1,new Date());
+
+			saveRDV = rdv2.getCopy();
+			rdv2 = managerRDV.refuserUnRDV(ch1,rdv2);
+			System.out.println("[REFUS] nouvel état :" + rdv2.getEtat() + " précédent :" + saveRDV.getEtat() + " voulu : Refusé");
+
+			saveRDV = rdv2.getCopy();
+			rdv2 = managerRDV.reporterUnRDV(ch1,rdv2,new Date());
+			System.out.println("[REPORT] nouvel état :" + rdv2.getEtat() + " précédent :" + saveRDV.getEtat()+ " voulu : Refusé");
+
+			RDV rdv3 = managerRDV.prendreUnRDV(pa1,pa2,ch1,new Date());
+			if (rdv3 == null) {
+				System.out.println("[RDV invalide voulu - invalide obtenu]");
+			} else {
+				System.out.println("[RDV invalide voulu - valide obtenu]");
+			}
+
+			RDV rdv4 = managerRDV.prendreUnRDV(pa2,pa2,ch2,new Date());
+			if (rdv4 == null) {
+				System.out.println("[RDV valide voulu - invalide obtenu]");
+			} else {
+				System.out.println("[RDV valide voulu - valide obtenu]");
+			}
+
+			RDV rdv5 = managerRDV.prendreUnRDV(pa1,pa1,k1,new Date());
+			if (rdv5 == null) {
+				System.out.println("[RDV valide voulu - invalide obtenu]");
+			} else {
+				System.out.println("[RDV valide voulu - valide obtenu]");
+			}
+
+			List<RDV> lRDV = managerRDV.getAllForValid();
+			if(lRDV.size() == 2) {
+				System.out.println("getAllForValid - valide (2:" + lRDV.size() +")");
+			} else {
+				System.out.println("getAllForValid - invalide (2:" + lRDV.size() +")");
+			}
+
+			lRDV = managerRDV.getAll();
+			if(lRDV.size() == 4) {
+				System.out.println("getAll - valide (4:" + lRDV.size() +")");
+			} else {
+				System.out.println("getAll - invalide (4:" + lRDV.size() +")");
+			}
+
 			//tx.commit();
 
 		} catch (Exception e) {
