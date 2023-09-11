@@ -1,9 +1,13 @@
-package domain;
+package DAO.DAOImpl;
 
+import DAO.Dao;
+import domain.Patient;
+import domain.Practicien;
+import domain.RDV;
+import domain.Utilisateur;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Query;
-import jdk.jshell.execution.Util;
 
 import java.util.Date;
 import java.util.List;
