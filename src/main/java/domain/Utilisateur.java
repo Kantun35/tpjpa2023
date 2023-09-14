@@ -26,6 +26,10 @@ public class Utilisateur {
         this.tel = tel;
     }
 
+    public Utilisateur() {
+
+    }
+
     public long getId() {
         return this.id;
     }

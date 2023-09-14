@@ -20,6 +20,11 @@ public class Patient extends Utilisateur{
         this.numSecSoc = numSecSoc;
     }
 
+    public Patient() {
+        super();
+
+    }
+
     public String getNumSecSoc() {
         return numSecSoc;
     }
